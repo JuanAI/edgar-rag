@@ -1,0 +1,20 @@
+# Run automatically on `git commit` after `pre-commit install` (done by `make setup`).
+# Also run in CI via pr.yml. Keep hook versions in sync with `pre-commit autoupdate`.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=1000"] # allow uv.lock (~600KB)
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.22 # keep aligned with the ruff pin in uv.lock
+    hooks:
+      - id: ruff # lint
+        args: ["--fix"]
+      - id: ruff-format # format

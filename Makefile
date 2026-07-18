@@ -15,7 +15,8 @@ help: ## Show this help.
 	&& uv sync --extra dev
 
 .PHONY: setup
-setup: .venv ## Create/refresh the local virtualenv (uv sync --extra dev).
+setup: .venv ## Create/refresh the venv and install git pre-commit hooks.
+	. .venv/bin/activate && pre-commit install
 
 .PHONY: lint
 lint: .venv ## Lint the codebase with ruff.
