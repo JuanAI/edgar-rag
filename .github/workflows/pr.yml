@@ -32,5 +32,8 @@ jobs:
       - name: Pre-commit checks
         uses: pre-commit/action@v3.0.1
 
+      - name: Type check
+        run: make typecheck
+
       - name: Run tests
         run: make test

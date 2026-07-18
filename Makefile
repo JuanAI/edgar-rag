@@ -22,6 +22,10 @@ setup: .venv ## Create/refresh the venv and install git pre-commit hooks.
 lint: .venv ## Lint the codebase with ruff.
 	. .venv/bin/activate && ruff check .
 
+.PHONY: typecheck
+typecheck: .venv ## Run mypy type checking.
+	. .venv/bin/activate && mypy src tests
+
 .PHONY: test
 test: .venv ## Run local testing (lint + unit tests).
 	$(MAKE) lint
