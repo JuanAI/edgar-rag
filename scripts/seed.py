@@ -12,6 +12,7 @@ The worker picks the messages up and runs the full ingest pipeline.
 SEC asks for a descriptive User-Agent with contact info — set
 EDGAR_RAG_SEC_USER_AGENT (default below) so requests aren't throttled/blocked.
 """
+
 from __future__ import annotations
 
 import json

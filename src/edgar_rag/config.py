@@ -3,6 +3,7 @@
 Everything is overridable via env so the same image runs locally, in Docker, or
 against real AWS/Bedrock by flipping a few variables (see .env.example).
 """
+
 from __future__ import annotations
 
 from functools import lru_cache

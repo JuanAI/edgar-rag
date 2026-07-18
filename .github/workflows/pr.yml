@@ -1,0 +1,36 @@
+name: PR
+
+# Runs on every pull request and on pushes to main. GitHub Actions is free for
+# public repositories, so this costs nothing.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Set up environment
+        run: make setup
+
+      - name: Pre-commit checks
+        uses: pre-commit/action@v3.0.1
+
+      - name: Run tests
+        run: make test
