@@ -1,4 +1,5 @@
 """Domain models shared across the ingestion and query paths."""
+
 from __future__ import annotations
 
 from pydantic import BaseModel, Field

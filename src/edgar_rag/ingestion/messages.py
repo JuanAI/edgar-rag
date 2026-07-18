@@ -5,6 +5,7 @@ lets a message with empty strings pass and then fail deep in the
 pipeline. Here we reject empty/whitespace-only required fields up front with a
 clear error, so malformed messages die at the boundary, not three stages in.
 """
+
 from __future__ import annotations
 
 import json

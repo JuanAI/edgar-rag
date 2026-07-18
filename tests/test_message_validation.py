@@ -1,5 +1,6 @@
 """Edge validation (a real production lesson): present-but-empty required fields
 must be rejected at the boundary, not just checked for presence."""
+
 import json
 
 import pytest
