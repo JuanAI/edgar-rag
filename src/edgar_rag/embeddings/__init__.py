@@ -23,9 +23,16 @@ __all__ = [
 def get_embedding_provider(settings: Settings) -> EmbeddingProvider:
     """Build the embedding provider named by `settings.embedding_provider`."""
     provider = settings.embedding_provider
+    if provider == "local":
+        # Imported lazily: sentence-transformers is an optional dependency.
+        from .local import LocalEmbeddingProvider
+
+        return LocalEmbeddingProvider(settings.embedding_model)
     if provider == "hash":
         return HashingEmbeddingProvider(settings.embedding_dim)
-    raise ValueError(f"unknown embedding_provider {provider!r}; supported providers: 'hash'")
+    raise ValueError(
+        f"unknown embedding_provider {provider!r}; supported providers: 'local', 'hash'"
+    )
 
 
 def embed_chunks(provider: EmbeddingProvider, chunks: list[Chunk]) -> list[Chunk]:
