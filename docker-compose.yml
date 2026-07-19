@@ -1,0 +1,32 @@
+# Local infrastructure for edgar-rag. A single-node OpenSearch with security
+# disabled — fine for local dev and tests, never for production. `make up` starts
+# it; `make down` removes it (and its data volume).
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.15.0
+    container_name: edgar-rag-opensearch
+    environment:
+      - discovery.type=single-node
+      # No TLS/auth locally (matches build_client). Both flags are needed: the
+      # 2.12+ demo installer otherwise demands an admin password at startup.
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    healthcheck:
+      # Green/yellow status means the node is ready to accept index requests.
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  opensearch-data:

@@ -38,3 +38,19 @@ test-local: .venv ## Run model-backed tests against real MiniLM (downloads ~90MB
 	. .venv/bin/activate \
 	&& uv sync --extra dev --extra local \
 	&& pytest tests/test_embeddings_local.py -v
+
+.PHONY: up
+up: ## Start local infra (OpenSearch) in the background and wait until healthy.
+	docker compose up -d --wait
+
+.PHONY: down
+down: ## Stop local infra and remove its data volume.
+	docker compose down -v
+
+.PHONY: logs
+logs: ## Tail the local infra logs.
+	docker compose logs -f
+
+.PHONY: test-integration
+test-integration: .venv ## Run integration tests against local infra (start it with `make up`).
+	. .venv/bin/activate && pytest tests/test_opensearch_integration.py -v
