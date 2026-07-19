@@ -1,0 +1,28 @@
+// Workspace settings for edgar-rag. Assumes the venv created by `make setup`
+// (.venv at the repo root) and the recommended extensions in extensions.json.
+{
+  "python.defaultInterpreterPath": ".venv/bin/python",
+
+  // Test discovery: pytest reads testpaths=["tests"] and pythonpath=["src"]
+  // from pyproject.toml, so the Testing sidebar and CodeLens just work.
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.cwd": "${workspaceFolder}",
+  "python.testing.pytestArgs": ["tests"],
+
+  // Ruff = lint + format (same config CI and pre-commit use).
+  "ruff.interpreter": [".venv/bin/python"],
+  "ruff.path": [".venv/bin/ruff"],
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "explicit",
+      "source.fixAll.ruff": "explicit"
+    }
+  },
+
+  // Mypy via the venv, matching `make typecheck`.
+  "mypy-type-checker.interpreter": [".venv/bin/python"],
+  "mypy-type-checker.path": [".venv/bin/mypy"]
+}

@@ -37,3 +37,14 @@ jobs:
 
       - name: Run tests
         run: make test
+
+      # Cache the MiniLM weights so the model-backed tests download it only once
+      # across CI runs (~90MB), then run the real embedder end to end.
+      - name: Cache embedding model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-all-MiniLM-L6-v2
+
+      - name: Run model-backed tests
+        run: make test-local
