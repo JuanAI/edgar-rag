@@ -16,7 +16,7 @@ jobs:
         python-version: ["3.12"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
@@ -41,7 +41,7 @@ jobs:
       # Cache the MiniLM weights so the model-backed tests download it only once
       # across CI runs (~90MB), then run the real embedder end to end.
       - name: Cache embedding model
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/huggingface
           key: huggingface-all-MiniLM-L6-v2
