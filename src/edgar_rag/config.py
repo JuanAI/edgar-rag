@@ -31,6 +31,13 @@ class Settings(BaseSettings):
     opensearch_port: int = 9200
     opensearch_use_ssl: bool = False
     opensearch_index: str = "edgar-chunks"
+    # kNN / HNSW vector-index tuning. `m` and `ef_construction` trade retrieval
+    # recall against index build time and memory; cosine matches our normalized
+    # embeddings, and the Lucene engine ships with OpenSearch (no extra plugin).
+    opensearch_engine: str = "lucene"
+    opensearch_space_type: str = "cosinesimil"
+    hnsw_m: int = 16
+    hnsw_ef_construction: int = 128
 
     # --- Providers ---
     # embeddings: "local" (sentence-transformers) | "bedrock"
