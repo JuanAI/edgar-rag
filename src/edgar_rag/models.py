@@ -33,6 +33,8 @@ class Chunk(BaseModel):
     page_number: int
     chunk_index: int
     text: str
+    token_count: int | None = None  # tokens in this chunk (tiktoken)
+    char_offset: int | None = None  # start offset within the page's text
     embedding: list[float] | None = None
     metadata: dict[str, str] = Field(default_factory=dict)
 
