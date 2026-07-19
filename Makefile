@@ -32,3 +32,9 @@ test: .venv ## Run local testing (lint + unit tests).
 	. .venv/bin/activate \
 	&& set -a && { [ -f .env ] && . ./.env || true; } && set +a \
 	&& pytest
+
+.PHONY: test-local
+test-local: .venv ## Run model-backed tests against real MiniLM (downloads ~90MB once).
+	. .venv/bin/activate \
+	&& uv sync --extra dev --extra local \
+	&& pytest tests/test_embeddings_local.py -v
