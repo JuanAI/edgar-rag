@@ -1,12 +1,15 @@
-"""OpenSearch write path: connect, create the vector index, and bulk-index chunks.
+"""OpenSearch access layer: create the vector index, bulk-index chunks (write),
+and run tenant-scoped kNN retrieval (read).
 
-This is the second half of ingestion — after chunks are embedded, they land here
-to become searchable. The index stores each chunk's `embedding` as a `knn_vector`
-so nearest-neighbour (kNN) search can later find the chunks closest to a question.
-The read path (the kNN query itself) lives in the query step, not here.
+Chunks are embedded, then indexed here with their `embedding` as a `knn_vector`
+so nearest-neighbour (kNN) search can find the chunks closest to a question. The
+higher-level read orchestration (embed the question, build citations) lives in
+the query package; this module is the raw OpenSearch access.
 
-Multi-tenancy is by shared index: every chunk carries a `tenant` field and the
-query path always filters on it, so a tenant can never retrieve another's data.
+Multi-tenancy is by shared index: every chunk carries a `tenant` field and every
+kNN query filters on it (see build_knn_query), so a tenant can never retrieve
+another's data. The filter is applied here, unconditionally — callers cannot skip
+it.
 
 Production lessons baked in:
   * the vector field's `dimension` must match the embedder, so the index is
@@ -27,7 +30,7 @@ from opensearchpy import OpenSearch, helpers
 from opensearchpy.exceptions import OpenSearchException
 
 from ..config import Settings
-from ..models import Chunk
+from ..models import Chunk, RetrievedChunk
 
 logger = logging.getLogger(__name__)
 
@@ -170,3 +173,56 @@ def bulk_index(client: OpenSearch, index: str, chunks: list[Chunk]) -> int:
         raise
     logger.info("bulk indexed chunks", extra={"index": index, "count": success})
     return success
+
+
+def build_knn_query(
+    vector: list[float], tenant: str, doc_type: str | None, k: int
+) -> dict[str, Any]:
+    """Build a kNN query that is ALWAYS scoped to one tenant.
+
+    The tenant term is non-negotiable — it is added here, not left to callers —
+    so retrieval can never cross tenant boundaries. `doc_type` is an optional
+    extra scope (e.g. only 10-Ks), which removes cross-type noise when set.
+    """
+    filters: list[dict[str, Any]] = [{"term": {"tenant": tenant}}]
+    if doc_type:
+        filters.append({"term": {"doc_type": doc_type}})
+    return {
+        "size": k,
+        "query": {
+            "knn": {
+                "embedding": {
+                    "vector": vector,
+                    "k": k,
+                    "filter": {"bool": {"must": filters}},
+                }
+            }
+        },
+    }
+
+
+def knn_search(
+    client: OpenSearch,
+    index: str,
+    *,
+    vector: list[float],
+    tenant: str,
+    doc_type: str | None,
+    k: int,
+) -> list[RetrievedChunk]:
+    """Return the k nearest chunks to `vector`, scoped to `tenant` (and optionally
+    `doc_type`). The OpenSearch `_score` becomes each chunk's similarity score."""
+    resp = client.search(index=index, body=build_knn_query(vector, tenant, doc_type, k))
+    results: list[RetrievedChunk] = []
+    for hit in resp["hits"]["hits"]:
+        source = hit["_source"]
+        results.append(
+            RetrievedChunk(
+                text=source["text"],
+                score=hit["_score"],
+                document_id=source["document_id"],
+                doc_type=source["doc_type"],
+                page_number=source["page_number"],
+            )
+        )
+    return results
