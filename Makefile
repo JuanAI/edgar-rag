@@ -53,4 +53,12 @@ logs: ## Tail the local infra logs.
 
 .PHONY: test-integration
 test-integration: .venv ## Run integration tests against local infra (start it with `make up`).
-	. .venv/bin/activate && pytest tests/test_opensearch_integration.py -v
+	. .venv/bin/activate \
+	&& uv sync --extra dev --extra local \
+	&& pytest tests/test_opensearch_integration.py tests/test_query_integration.py tests/test_eval_integration.py -v
+
+.PHONY: eval
+eval: .venv ## Run retrieval evaluation and print metrics (needs `make up` + MiniLM).
+	. .venv/bin/activate \
+	&& uv sync --extra dev --extra local \
+	&& EDGAR_RAG_OPENSEARCH_HOST=localhost python scripts/eval.py
