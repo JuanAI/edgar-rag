@@ -1,0 +1,83 @@
+{
+  "tenant": "eval-corp",
+  "documents": [
+    {
+      "document_id": "ACME-10K-2023",
+      "doc_type": "10-K",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "Item 1A. Risk Factors. Our business faces intense competition from larger, better-capitalized rivals that may undercut our pricing and out-invest us in new technology. We are exposed to cybersecurity threats, including data breaches and ransomware, that could disrupt operations and damage our reputation. Disruptions in our global supply chain, including component shortages and shipping delays, could impair our ability to deliver products on time and reduce margins."
+        },
+        {
+          "page_number": 2,
+          "text": "Results of Operations. Total revenue increased 12% year over year to 4.2 billion dollars, driven by strong demand for our flagship product line and expansion into international markets. Gross margin improved to 41% as manufacturing efficiencies offset higher input costs. Subscription revenue, our fastest growing segment, rose 28% and now represents a fifth of total sales."
+        },
+        {
+          "page_number": 3,
+          "text": "Liquidity and Capital Resources. As of year end we held 1.1 billion dollars in cash and cash equivalents and short-term investments. We maintain an undrawn 500 million dollar revolving credit facility that matures in 2027. We believe our cash on hand, cash generated from operations, and available borrowing capacity are sufficient to fund working capital and planned capital expenditures for at least the next twelve months."
+        },
+        {
+          "page_number": 4,
+          "text": "Item 3. Legal Proceedings. In March we were named as a defendant in a patent infringement lawsuit filed by a competitor alleging that our imaging sensors violate three of its patents. We believe the claims are without merit and intend to defend the matter vigorously. We are also subject to routine litigation and regulatory inquiries arising in the ordinary course of business."
+        }
+      ]
+    },
+    {
+      "document_id": "GLOBEX-10K-2023",
+      "doc_type": "10-K",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "Human Capital. As of December 31 we employed approximately 8,400 full-time employees across engineering, sales, and operations. We compete for talent in a tight labor market and invest heavily in recruiting, apprenticeship programs, and retention through competitive compensation and equity awards. Voluntary turnover declined to 9% as we expanded remote work options and internal mobility."
+        },
+        {
+          "page_number": 2,
+          "text": "Research and Development. We invested 620 million dollars in research and development during the year, or roughly 15% of revenue, focused on next-generation battery chemistry and power-management software. Our R&D organization filed 140 new patent applications and launched two major product platforms that are expected to drive future growth."
+        },
+        {
+          "page_number": 3,
+          "text": "Item 2. Properties. We own our 300,000 square foot headquarters and primary manufacturing facility in Ohio and lease additional distribution centers and sales offices in twelve states and four countries. We believe our facilities are adequate for current needs and that suitable additional space is available on commercially reasonable terms to support expansion."
+        },
+        {
+          "page_number": 4,
+          "text": "Dividends and Share Repurchases. Our board declared quarterly cash dividends totaling 1.20 dollars per share during the year. In addition, we repurchased 3.5 million shares of common stock under our existing buyback authorization, returning a combined 210 million dollars to shareholders. Future dividends and repurchases remain subject to board approval and capital allocation priorities."
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "question": "What are the main risk factors the company faces?",
+      "relevant": [{"document_id": "ACME-10K-2023", "page_number": 1, "grade": 3}]
+    },
+    {
+      "question": "How much did total revenue grow last year and why?",
+      "relevant": [{"document_id": "ACME-10K-2023", "page_number": 2, "grade": 3}]
+    },
+    {
+      "question": "How much cash and available credit does the company have?",
+      "relevant": [{"document_id": "ACME-10K-2023", "page_number": 3, "grade": 3}]
+    },
+    {
+      "question": "Is the company involved in any lawsuits or legal proceedings?",
+      "relevant": [{"document_id": "ACME-10K-2023", "page_number": 4, "grade": 3}]
+    },
+    {
+      "question": "How many people does the company employ and how does it attract talent?",
+      "relevant": [{"document_id": "GLOBEX-10K-2023", "page_number": 1, "grade": 3}]
+    },
+    {
+      "question": "How much did the company spend on research and development?",
+      "relevant": [{"document_id": "GLOBEX-10K-2023", "page_number": 2, "grade": 3}]
+    },
+    {
+      "question": "What facilities and properties does the company operate?",
+      "relevant": [{"document_id": "GLOBEX-10K-2023", "page_number": 3, "grade": 3}]
+    },
+    {
+      "question": "Does the company pay dividends or buy back its stock?",
+      "relevant": [{"document_id": "GLOBEX-10K-2023", "page_number": 4, "grade": 3}]
+    }
+  ]
+}
